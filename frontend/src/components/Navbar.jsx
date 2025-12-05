@@ -7,16 +7,23 @@ export default function Navbar({ activeChannelName }) {
   const { user, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
 
-  let nav = null;
-  try {
-    nav = useNavigate();
-  } catch (e) {
-    nav = null;
-  }
+  const navigate = useNavigate();
 
   function goHome() {
-    if (nav) nav("/");
-    else window.location.href = "/";
+    navigate("/");
+  }
+
+  function goLogin() {
+    navigate("/login");
+  }
+
+  function goSignup() {
+    navigate("/signup");
+  }
+
+  function safeLogout() {
+    logout();
+    navigate("/login");
   }
 
   return (
@@ -57,12 +64,16 @@ export default function Navbar({ activeChannelName }) {
           {user ? (
             <>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontWeight: 600 }}>{user.name || (user.id && user.id.slice(0, 8))}</div>
-                <div style={{ fontSize: 12, color: "#666" }}>{user.email || ""}</div>
+                <div style={{ fontWeight: 600 }}>
+                  {user.name || (user.id && user.id.slice(0, 8))}
+                </div>
+                <div style={{ fontSize: 12, color: "#666" }}>
+                  {user.email || ""}
+                </div>
               </div>
 
               <button
-                onClick={() => { logout(); if (nav) nav("/login"); else window.location.href = "/login"; }}
+                onClick={safeLogout}
                 style={{
                   padding: "8px 14px",
                   borderRadius: 8,
@@ -90,7 +101,7 @@ export default function Navbar({ activeChannelName }) {
               </button>
 
               <button
-                onClick={() => { if (nav) nav("/signup"); else window.location.href = "/signup"; }}
+                onClick={goSignup}
                 style={{
                   padding: "8px 14px",
                   borderRadius: 8,

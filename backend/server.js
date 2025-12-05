@@ -12,20 +12,16 @@ app.use(cors({
   credentials: true
 }));
 
-// Mount routes
 app.use("/api/auth", require("./src/routes/auth"));
 app.use("/api/channels", require("./src/routes/channels"));
 app.use("/api/messages", require("./src/routes/messages"));
 
-// simple health
 app.get("/health", (req, res) => res.json({ ok: true }));
 
 const server = http.createServer(app);
 initSockets(server, app);
 
 const PORT = process.env.PORT || 4000;
-
-console.log("DEBUG: MONGODB_URI =>", !!process.env.MONGODB_URI);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
